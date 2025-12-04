@@ -3,7 +3,7 @@ name: AI Compliance Scan
 on:
   pull_request:
     types: [opened, synchronize, reopened]
-    branches: [main, master, develop]
+    branches: [main, master, develop, demo1]
 
 permissions:
   contents: read
