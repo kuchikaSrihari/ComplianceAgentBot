@@ -4,6 +4,9 @@ import java.sql.*;
 import java.security.MessageDigest;
 import java.io.ObjectInputStream;
 import java.io.FileInputStream;
+import java.util.regex.Pattern;
+import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
 
 /**
  * Authentication Service
@@ -133,6 +136,32 @@ public class AuthService {
     
     public void processRequest(String data) {
         // Placeholder - needs implementation
+    }
+    
+    // CRITICAL: ReDoS vulnerability
+    public boolean validateEmail(String email) {
+        // Vulnerable: Catastrophic backtracking
+        Pattern pattern = Pattern.compile("^([a-zA-Z0-9]+)+@[a-zA-Z0-9]+\\.[a-zA-Z]+$");
+        return pattern.matcher(email).matches();
+    }
+    
+    // CRITICAL: Weak encryption
+    public byte[] encryptData(String data) throws Exception {
+        // Vulnerable: ECB mode, weak key
+        Cipher cipher = Cipher.getInstance("DES/ECB/PKCS5Padding");
+        SecretKeySpec key = new SecretKeySpec("12345678".getBytes(), "DES");
+        cipher.init(Cipher.ENCRYPT_MODE, key);
+        return cipher.doFinal(data.getBytes());
+    }
+    
+    // HIGH: Logging sensitive data
+    public void logUserLogin(String username, String password) {
+        System.out.println("Login attempt: user=" + username + ", pass=" + password);
+    }
+    
+    // HIGH: Null pointer dereference
+    public String getUserRole(User user) {
+        return user.getUsername().toUpperCase();  // No null check!
     }
     
     

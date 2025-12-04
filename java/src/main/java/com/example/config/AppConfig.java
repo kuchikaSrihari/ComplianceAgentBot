@@ -51,4 +51,17 @@ public class AppConfig {
     // TODO: Implement secrets manager integration
     // FIXME: Remove hardcoded credentials before production
     // TODO: Add SSL certificate validation
+    
+    // CRITICAL: More hardcoded secrets
+    public static final String GITHUB_TOKEN = "ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+    public static final String SLACK_WEBHOOK = "https://hooks.slack.com/services/T00/B00/XXXX";
+    public static final String PRIVATE_KEY = "-----BEGIN RSA PRIVATE KEY-----\nMIIEpAIBAAKCAQEA...\n-----END RSA PRIVATE KEY-----";
+    
+    // HIGH: Insecure SSL settings
+    public static final boolean DISABLE_SSL_VERIFICATION = true;
+    public static final boolean TRUST_ALL_CERTIFICATES = true;
+    
+    // MEDIUM: Overly permissive CORS
+    public static final String CORS_ALLOWED_ORIGINS = "*";
+    public static final String CORS_ALLOWED_METHODS = "*";
 }

@@ -4,6 +4,9 @@ import java.sql.*;
 import java.security.MessageDigest;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
+import java.io.*;
+import java.net.URL;
+import javax.xml.parsers.DocumentBuilderFactory;
 
 /**
  * API Controller
@@ -67,6 +70,34 @@ public class ApiController {
     
     // TODO: Implement proper authentication
     // FIXME: Add request validation
+    
+    // CRITICAL: Path traversal vulnerability
+    public String readFile(String filename) throws IOException {
+        // Vulnerable: No path validation
+        File file = new File("/data/uploads/" + filename);
+        BufferedReader reader = new BufferedReader(new FileReader(file));
+        return reader.readLine();
+    }
+    
+    // CRITICAL: SSRF vulnerability
+    public String fetchUrl(String userUrl) throws Exception {
+        // Vulnerable: User-controlled URL
+        URL url = new URL(userUrl);
+        BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
+        return in.readLine();
+    }
+    
+    // CRITICAL: XXE vulnerability
+    public void parseXml(String xmlData) throws Exception {
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        // Vulnerable: XXE not disabled
+        factory.newDocumentBuilder().parse(new ByteArrayInputStream(xmlData.getBytes()));
+    }
+    
+    // HIGH: Insecure random
+    public int generateSessionId() {
+        return new java.util.Random().nextInt();  // Predictable!
+    }
     
     private String bytesToHex(byte[] bytes) {
         StringBuilder sb = new StringBuilder();
